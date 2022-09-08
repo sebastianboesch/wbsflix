@@ -98,8 +98,20 @@ def weighted_user_rec(user_id, num_movies):
 
 
 # App design
-st.set_page_config(page_title='WBSFLIX group 4', page_icon="random", layout="wide", initial_sidebar_state="auto", menu_items=None)
-st.title("Welcome to WBSFLIX")
+st.set_page_config(page_title='WBSflix group 4', page_icon="random", layout="wide", initial_sidebar_state="auto", menu_items=None)
+
+
+
+from PIL import Image
+image = Image.open('movie_periwinkle.png')
+
+st.image(image, width=100)
+
+
+
+
+st.title("welcome to WBSflix")
+st.subheader('group 4')
 
 # Create a list of all possible genres
 all_genres = movies['genres'].str.split(pat='|')
@@ -124,6 +136,7 @@ pop_thres = 20 # predefined
 
 
 with st.sidebar:
+    st.write('menu selector')
     user_id = st.number_input("User ID", value=1, min_value=1, step=1, format='%i')
     movie_id = st.number_input("Movie ID", value=1, min_value=1, step=1, format='%i')
 #    num_movies = st.number_input("Number of recommendations", value=1, min_value=1, step=1, format='%i')
@@ -144,7 +157,7 @@ with tab_popularity:
     for i in recommendations:
         st.text(i)
         link = mp.get_poster(title=i)
-        st.image(link)
+        st.image(link, width=150)
 
 
 with tab_item:
@@ -157,7 +170,7 @@ with tab_item:
     for i in recommendations:
         st.text(i)
         link = mp.get_poster(title=i)
-        st.image(link)
+        st.image(link, width=150)
 
 
 with tab_user:
@@ -173,7 +186,7 @@ with tab_user:
         link = mp.get_poster(title=i)
         try:
             
-            st.image(link)
+            st.image(link, width=150)
 
         except MovieNotFound:
             st.write('no image for this movie')
