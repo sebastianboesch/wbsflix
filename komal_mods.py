@@ -10,8 +10,6 @@ movies = pd.read_csv(data_path + 'movies.csv')
 ratings = pd.read_csv(data_path + 'ratings.csv')
 tags = pd.read_csv(data_path + 'tags.csv')
 
-# Flags
-error_flag = False
 
 # Function definitions
 # popularity-based (n, pop_thres)
@@ -99,6 +97,19 @@ def weighted_user_rec(user_id, num_movies):
 
 
 
+def show_item():
+    for i in recommendations:
+        error_flag = False
+        st.text(i)
+        try: link = mp.get_poster(title=i)
+        except: error_flag = True
+        else: st.image(link, width=150)
+        if error_flag:
+            st.warning('no image')
+
+
+
+
 
 # App design
 st.set_page_config(page_title='WBSflix group 4', page_icon="random", layout="wide", initial_sidebar_state="auto", menu_items=None)
@@ -154,13 +165,7 @@ with tab_popularity:
     recommendations = get_popular_movies(pop_thres, num_movies, genre)
 
     # print the list
-    for i in recommendations:
-        st.text(i)
-
-        try: link = mp.get_poster(title=i)
-        except: error_flag = True
-        else: st.image(link, width=150)
-        if error_flag: st.warning('no image')
+    show_item()
 
 
 with tab_item:
@@ -169,13 +174,7 @@ with tab_item:
     recommendations = get_similar_movies(movie_id, num_movies)
 
     # print the list
-    for i in recommendations:
-        st.text(i)
-
-        try: link = mp.get_poster(title=i)
-        except: error_flag = True
-        else: st.image(link, width=150)
-        if error_flag: st.warning('no image')
+    show_item()
 
 with tab_user:
     st.header("You may like these movies based on your interests...")
@@ -183,53 +182,7 @@ with tab_user:
     recommendations = weighted_user_rec(user_id, num_movies)
 
     # print the list
-    for i in recommendations:
-        st.text(i)
-
-        try: link = mp.get_poster(title=i)
-        except: error_flag = True
-        else: st.image(link, width=150)
-        if error_flag: st.warning('no image')
-
-
-"""
-
-col1, col2, col3 = st.columns(3)
-
-with col1:
-    st.header("A cat")
-    st.image("https://static.streamlit.io/examples/cat.jpg")
-
-with col2:
-    st.header("A dog")
-    st.image("https://static.streamlit.io/examples/dog.jpg")
-
-with col3:
-    st.header("An owl")
-    st.image("https://static.streamlit.io/examples/owl.jpg")
-
-"""
-
-"""
-
-def show_recomm():
-
-    faa = ""
-    for j in range(len(recommendations)):
-        foo = "col"+str(j)
-        faa = faa+foo+","
-    faa = faa[0:-1]
-    exec(faa + " = st.columns(len(recommendations))")
-
-    for i in recommendations:
-        fzz = "with col" + str(i) + ": " + st.header("A cat")
-        exec(fzz) 
-#                st.image("https://static.streamlit.io/examples/cat.jpg")
-
-show_recomm()
-
-
-"""
+    show_item()
 
 
 # st.snow()
