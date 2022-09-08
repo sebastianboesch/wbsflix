@@ -97,6 +97,7 @@ def weighted_user_rec(user_id, num_movies):
 
 
 
+
 # App design
 st.set_page_config(page_title='WBSflix group 4', page_icon="random", layout="wide", initial_sidebar_state="auto", menu_items=None)
 
@@ -130,19 +131,14 @@ pop_thres = 20 # predefined
 
 
 
-
-
-
-
-
 with st.sidebar:
     st.write('menu selector')
     user_id = st.number_input("User ID", value=1, min_value=1, step=1, format='%i')
-    movie_id = st.number_input("Movie ID", value=1, min_value=1, step=1, format='%i')
-#    num_movies = st.number_input("Number of recommendations", value=1, min_value=1, step=1, format='%i')
+    movie_title = st.selectbox('Please select one:', movies['title'])
+    movie_id = movies[movies['title'].str.find(movie_title) != -1]['movieId'].values[0]
+    st.write(movie_id)
     num_movies = st.sidebar.slider("how many movies to display?", min_value=1, max_value=10, value=1, step=1, format=None, key='n-movies', disabled=False)
     genre = st.selectbox('Genre', options=genres)
-
 
 
 
@@ -156,12 +152,16 @@ with tab_popularity:
     # print the list
     for i in recommendations:
         st.text(i)
-        link = mp.get_poster(title=i)
-        st.image(link, width=150)
+
 
 
 with tab_item:
     st.header("Liked a particular movie? Here are some more similar movies...")
+
+
+#    st.write(f'Movies related to "{movie_title}"', get_similar_movies(movie_title, num_movies))
+
+
 
     # get recommendations
     recommendations = get_similar_movies(movie_id, num_movies)
@@ -169,8 +169,7 @@ with tab_item:
     # print the list
     for i in recommendations:
         st.text(i)
-        link = mp.get_poster(title=i)
-        st.image(link, width=150)
+
 
 
 with tab_user:
@@ -182,15 +181,6 @@ with tab_user:
     # print the list
     for i in recommendations:
         st.text(i)
-
-        link = mp.get_poster(title=i)
-        try:
-            
-            st.image(link, width=150)
-
-        except MovieNotFound:
-            st.write('no image for this movie')
-
 
 
 st.snow()
