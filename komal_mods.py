@@ -10,6 +10,8 @@ movies = pd.read_csv(data_path + 'movies.csv')
 ratings = pd.read_csv(data_path + 'ratings.csv')
 tags = pd.read_csv(data_path + 'tags.csv')
 
+# Flags
+error_flag = False
 
 # Function definitions
 # popularity-based (n, pop_thres)
@@ -104,15 +106,15 @@ st.set_page_config(page_title='WBSflix group 4', page_icon="random", layout="wid
 
 
 from PIL import Image
-image = Image.open('movie_periwinkle.png')
+# image = Image.open('movie_periwinkle.png')
+image = Image.open('popcorn_transparent_v2.png')
 
-st.image(image, width=100)
+st.image(image, width=150)
 
 
 
 
-st.title("welcome to WBSflix")
-st.subheader('group 4')
+
 
 # Create a list of all possible genres
 all_genres = movies['genres'].str.split(pat='|')
@@ -132,13 +134,15 @@ pop_thres = 20 # predefined
 
 
 with st.sidebar:
+    st.title("WBSflix")
+    st.subheader('group 4')
+
     st.write('menu selector')
-    user_id = st.number_input("User ID", value=1, min_value=1, step=1, format='%i')
-    movie_title = st.selectbox('Please select one:', movies['title'])
+    user_id = st.number_input("who are you? (User ID)", value=507, min_value=1, step=1, format='%i')
+    movie_title = st.selectbox('select a movie you like:', movies['title'])
     movie_id = movies[movies['title'].str.find(movie_title) != -1]['movieId'].values[0]
-    st.write(movie_id)
-    num_movies = st.sidebar.slider("how many movies to display?", min_value=1, max_value=10, value=1, step=1, format=None, key='n-movies', disabled=False)
-    genre = st.selectbox('Genre', options=genres)
+    num_movies = st.sidebar.slider("how many movies to display?", min_value=1, max_value=20, value=3, step=1, format=None, key='n-movies', disabled=False)
+    genre = st.selectbox('genre', options=genres)
 
 
 
@@ -153,16 +157,14 @@ with tab_popularity:
     for i in recommendations:
         st.text(i)
 
+        try: link = mp.get_poster(title=i)
+        except: error_flag = True
+        else: st.image(link, width=150)
+        if error_flag: st.warning('no image')
 
 
 with tab_item:
     st.header("Liked a particular movie? Here are some more similar movies...")
-
-
-#    st.write(f'Movies related to "{movie_title}"', get_similar_movies(movie_title, num_movies))
-
-
-
     # get recommendations
     recommendations = get_similar_movies(movie_id, num_movies)
 
@@ -170,11 +172,13 @@ with tab_item:
     for i in recommendations:
         st.text(i)
 
-
+        try: link = mp.get_poster(title=i)
+        except: error_flag = True
+        else: st.image(link, width=150)
+        if error_flag: st.warning('no image')
 
 with tab_user:
     st.header("You may like these movies based on your interests...")
-
     # get recommendations
     recommendations = weighted_user_rec(user_id, num_movies)
 
@@ -182,5 +186,50 @@ with tab_user:
     for i in recommendations:
         st.text(i)
 
+        try: link = mp.get_poster(title=i)
+        except: error_flag = True
+        else: st.image(link, width=150)
+        if error_flag: st.warning('no image')
 
-st.snow()
+
+"""
+
+col1, col2, col3 = st.columns(3)
+
+with col1:
+    st.header("A cat")
+    st.image("https://static.streamlit.io/examples/cat.jpg")
+
+with col2:
+    st.header("A dog")
+    st.image("https://static.streamlit.io/examples/dog.jpg")
+
+with col3:
+    st.header("An owl")
+    st.image("https://static.streamlit.io/examples/owl.jpg")
+
+"""
+
+"""
+
+def show_recomm():
+
+    faa = ""
+    for j in range(len(recommendations)):
+        foo = "col"+str(j)
+        faa = faa+foo+","
+    faa = faa[0:-1]
+    exec(faa + " = st.columns(len(recommendations))")
+
+    for i in recommendations:
+        fzz = "with col" + str(i) + ": " + st.header("A cat")
+        exec(fzz) 
+#                st.image("https://static.streamlit.io/examples/cat.jpg")
+
+show_recomm()
+
+
+"""
+
+
+# st.snow()
