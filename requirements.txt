@@ -3,3 +3,4 @@ pandas==1.4.3
 streamlit>=0.76.0
 scikit-learn==1.1.2
 pillow==9.2.0
+movieposters
