@@ -3,10 +3,10 @@ import pandas as pd
 import streamlit as st
 from sklearn.metrics.pairwise import cosine_similarity
 
-links = pd.read_csv('ml-latest-small/links.csv')
-movies = pd.read_csv('ml-latest-small/movies.csv')
-ratings = pd.read_csv('ml-latest-small/ratings.csv')
-tags = pd.read_csv('ml-latest-small/tags.csv')
+links = pd.read_csv('data/links.csv')
+movies = pd.read_csv('data/movies.csv')
+ratings = pd.read_csv('data/ratings.csv')
+tags = pd.read_csv('data/tags.csv')
 
 
 st.set_page_config(page_title='WBSFLIX group 4', page_icon="random", layout="wide", initial_sidebar_state="auto", menu_items=None)
